@@ -2,13 +2,14 @@ import React from 'react';
 import PT from 'prop-types';
 import * as API from '../API';
 import '../css/comments.css';
-import moment from 'moment';
+import { Comment, AddComment } from './index';
 
 class Comments extends React.Component {
     state = {
         comments: [],
         vote: '',
-        votedComments: []
+        votedComments: [],
+        comment: ''
     }
 
     componentDidMount = () => {
@@ -21,48 +22,45 @@ class Comments extends React.Component {
             .catch(console.error)
     }
 
+    componentDidUpdate() {
+        API.getArticleComments(this.props.articleId)
+            .then(comments => {
+                this.setState({
+                    comments
+                })
+            })
+    }
+
     render() {
-        const { currentUser, hidden } = this.props
+        const { currentUser, hidden, articleId, hideAddComment } = this.props
         const { votedComments, comments } = this.state
         return (
-            <div hidden={hidden} className="commentsBox">
-                {comments.sort((a, b) => b.votes - a.votes).map(comment => (
-                    <div key={comment._id} className="comment">
-                        <div className="head">
-                            <img alt="commentImg" id="commentImg" src={`${comment.created_by.avatar_url}`} /> {comment.created_by.username}
-                        </div>
-                        <p id="commentBody">
-                            {comment.body}
-                        </p>
-                        <p id="commentTime">
-                            <i className="fa fa-clock-o"></i> {moment(comment.created_at).fromNow()}
-                        </p>
-                        <div className="votes">
-                            <li id="vote">
-                                <i className="fa fa-heart-o"></i> {comment.votes}
-                            </li>
-                            {/* fa fa-thumbs-down */}
-                            {currentUser && currentUser.username === comment.created_by.username ?
-                                <div className="click" id="addVote" onClick={() => this.deleteComment(comment._id)}>
-                                    <i className="fa fa-trash-o"></i>
-                                </div> :
-                                <div>
-                                    <div onClick={() => this.handleCommentVote(comment._id, 'up')} hidden={this.hideCommentVote(comment._id, 'down')} className="click" id="addVote">
-                                        <i className={!votedComments.includes(comment._id) ? "fa fa-thumbs-o-up" : "fa fa-check"}></i>
-                                    </div>
-                                    <div onClick={() => this.handleCommentVote(comment._id, 'down')} hidden={this.hideCommentVote(comment._id, 'up')} className="click" id="addVote">
-                                        <i className={!votedComments.includes(comment._id) ? "fa fa-thumbs-o-down" : "fa fa-check"}></i>
-                                    </div>
-                                </div>}
-                        </div>
-                    </div>
-                ))}
+            <div>
+                <div hidden={hidden} className="commentsBox">
+                    {comments.sort((a, b) => b.votes - a.votes).map(comment => (
+                        <Comment hideCommentVote={this.hideCommentVote} handleCommentVote={this.handleCommentVote} comment={comment} currentUser={currentUser} votedComments={votedComments} />
+                    ))}
+                </div>
+                <AddComment addNewComment={this.addNewComment} handleChange={this.handleChange} articleId={articleId} currentUser={currentUser} hideAddComment={hideAddComment} />
             </div>
         );
     }
 
-    deleteComment = (commentId) => {
-        API.deleteComment(commentId)
+    addNewComment = (event) => {
+        const { currentUser, articleId, updateCommentCount } = this.props
+        const { comment } = this.state
+        event.preventDefault()
+        API.postComment(articleId, {
+            comment,
+            created_by: currentUser._id,
+        })
+        updateCommentCount()
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            comment: event.target.value
+        })
     }
 
     handleCommentVote = (commentId, vote) => {

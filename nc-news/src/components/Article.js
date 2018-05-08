@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Comments, AddComment } from './index';
+import { Comments } from './index';
 import { Link } from "react-router-dom";
 import * as API from '../API';
 import '../css/articles.css'
@@ -9,11 +9,14 @@ class Article extends React.Component {
     state = {
         hidden: true,
         hideAddComment: true,
-        vote: ''
+        vote: '',
+        votes: this.props.articles.find(article => article._id === this.props.match.params.articleId).votes,
+        commentCount: this.props.articles.find(article => article._id === this.props.match.params.articleId).commment_count
     }
+
     render() {
         const { currentUser, articles } = this.props
-        const { vote, hidden, hideAddComment } = this.state
+        const { vote, hidden, hideAddComment, votes, commentCount } = this.state
         const { articleId } = this.props.match.params
         const article = articles.find(article => article._id === articleId)
         return (
@@ -26,8 +29,8 @@ class Article extends React.Component {
                     </p>
                     <p id="articleBody">{article.body}</p>
                     <div className="counter">
-                        <li onClick={this.handleClick} id="count" className="click"><i className="fa fa-commenting-o"></i> {article.commment_count} </li>
-                        <li id="count"><i className="fa fa-heart-o"></i> {article.votes} </li>
+                        <li onClick={this.handleClick} id="count" className="click"><i className="fa fa-commenting-o"></i> {commentCount} </li>
+                        <li id="count"><i className="fa fa-heart-o"></i> {votes} </li>
                         <div hidden={currentUser && currentUser.username === article.created_by.username ? true : false}>
                             <div hidden={vote === "down" ? true : false}>
                                 <div onClick={() => this.handleArticleVote(article._id, 'up')} className="click" id={vote === "up" ? "voted" : "addComment"}>
@@ -43,19 +46,26 @@ class Article extends React.Component {
                         <li onClick={this.handleComment} id="addComment" className="click"><i className="fa fa-pencil"></i></li>
                     </div>
                 </div>
-                <Comments currentUser={currentUser} articleId={articleId} hidden={hidden} />
-                <AddComment articleId={articleId} currentUser={currentUser} hideAddComment={hideAddComment} />
+                <Comments updateCommentCount={this.updateCommentCount} currentUser={currentUser} articleId={articleId} hidden={hidden} hideAddComment={hideAddComment}/>
+                {/* <AddComment articleId={articleId} currentUser={currentUser} hideAddComment={hideAddComment} /> */}
             </div>
         );
     }
 
+    updateCommentCount = () => {
+        this.setState({
+            commentCount: this.state.commentCount+1
+        })
+    }
+
     handleArticleVote = (articleId, voted) => {
-        const {vote } = this.state
+        let { vote, votes } = this.state
+        votes = voted === 'up' ? votes + 1 : votes - 1
         if (vote === '') {
             API.putArticleVote(articleId, voted)
-                .then(res => console.log(res))
             this.setState({
-                vote: voted
+                vote: voted, 
+                votes
             })
         } else alert('You have already voted')
     }

@@ -6,6 +6,7 @@ import Nav from './Nav';
 import Profile from './Profile';
 import SearchBar from './Search';
 import Users from './Users';
+import Comment from './Comment'
 
 
 export {
@@ -16,5 +17,6 @@ export {
     Nav,
     Profile,
     SearchBar,
-    Users
+    Users, 
+    Comment
 } 

@@ -19,7 +19,7 @@ export const getUser = (username) => {
 
 export const postComment = (articleId, comment) => {
     return axios.post(`${url}/articles/${articleId}/comments`, comment)
-        .then(res => console.log(res))
+        .then(res => res.data)
 }
 
 export const putCommentVote = (commentId, vote) => {
