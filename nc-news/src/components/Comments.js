@@ -22,15 +22,6 @@ class Comments extends React.Component {
             .catch(console.error)
     }
 
-    // componentWillReceiveProps(newProps) { 
-    //     API.getArticleComments(newProps.articleId)
-    //         .then(comments => {
-    //             this.setState({
-    //                 comments
-    //             })
-    //         })
-    // }
-
     componentDidUpdate(newProps) {
         API.getArticleComments(newProps.articleId)
             .then(comments => {
@@ -41,13 +32,13 @@ class Comments extends React.Component {
     }
 
     render() {
-        const { currentUser, hidden, articleId, hideAddComment } = this.props
+        const { currentUser, hidden, articleId, hideAddComment, updateCommentCount } = this.props
         const { votedComments, comments } = this.state
         return (
             <div>
                 <div hidden={hidden} className="commentsBox">
                     {comments.sort((a, b) => b.votes - a.votes).map(comment => (
-                        <Comment hideCommentVote={this.hideCommentVote} handleCommentVote={this.handleCommentVote} comment={comment} currentUser={currentUser} votedComments={votedComments} />
+                        <Comment key={comment._id} updateCommentCount={updateCommentCount} hideCommentVote={this.hideCommentVote} handleCommentVote={this.handleCommentVote} comment={comment} currentUser={currentUser} votedComments={votedComments} />
                     ))}
                 </div>
                 <AddComment addNewComment={this.addNewComment} handleChange={this.handleChange} articleId={articleId} currentUser={currentUser} hideAddComment={hideAddComment} />
@@ -67,9 +58,9 @@ class Comments extends React.Component {
             comment,
             created_by: currentUser._id,
         })
-        // .then(() => {
-        //     updateCommentCount()
-        // })
+        .then(() => {
+            updateCommentCount(1)
+        })
         .catch(console.log)
     }
 

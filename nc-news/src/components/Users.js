@@ -1,7 +1,8 @@
 import React from 'react';
 import PT from 'prop-types';
+import { Redirect } from "react-router-dom";
 
-function Users({ loggedIn, logIn, handleUsername }) {
+function Users({ loggedIn, logIn, handleUsername, username }) {
     return (
         <div id="form-div" hidden={loggedIn}>
             <form onSubmit={logIn} className="form" id="form1">
@@ -16,6 +17,9 @@ function Users({ loggedIn, logIn, handleUsername }) {
                     <div className="ease"></div>
                 </div>
             </form>
+            {loggedIn &&
+            <Redirect to={`/users/${username}`} />
+            }
         </div>
     );
 }

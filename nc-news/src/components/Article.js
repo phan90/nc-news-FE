@@ -47,14 +47,13 @@ class Article extends React.Component {
                     </div>
                 </div>
                 <Comments updateCommentCount={this.updateCommentCount} currentUser={currentUser} articleId={articleId} hidden={hidden} hideAddComment={hideAddComment}/>
-                {/* <AddComment articleId={articleId} currentUser={currentUser} hideAddComment={hideAddComment} /> */}
             </div>
         );
     }
 
-    updateCommentCount = () => {
+    updateCommentCount = (num) => {
         this.setState({
-            commentCount: this.state.commentCount+1
+            commentCount: this.state.commentCount+num
         })
     }
 

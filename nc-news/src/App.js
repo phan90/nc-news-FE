@@ -22,15 +22,6 @@ class App extends React.Component {
       .catch(console.error)
   }
 
-  // componentDidUpdate() {
-  //   API.getArticles()
-  //     .then(articles => this.setState({
-  //       articles,
-  //       loading: false
-  //     }))
-  //     .catch(console.error)
-  // }
-
   render() {
     const { articles, loading, search, loggedIn, username, currentUser } = this.state
     return (

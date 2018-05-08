@@ -1,18 +1,16 @@
 import React from 'react';
-import PT from 'prop-types';
 import moment from 'moment';
 import * as API from '../API';
 
 class Comment extends React.Component {
     state = {
-        votes: this.props.comment.votes, 
         vote: '',
         votedComments: []
 
     }
-    render () {
-        const {comment, currentUser} = this.props
-        const {votedComments, votes} = this.state
+    render() {
+        const { comment, currentUser } = this.props
+        const { votedComments } = this.state
         return (
             <div key={comment._id} className="comment">
                 <div className="head">
@@ -45,23 +43,25 @@ class Comment extends React.Component {
             </div>
         );
 
-        
+
     }
 
     deleteComment = (commentId) => {
+        const {updateCommentCount} = this.props
         API.deleteComment(commentId)
+            .then(() => {
+                updateCommentCount(-1)
+            })
     }
 
     handleCommentVote = (commentId, vote) => {
-        let { votedComments, votes } = this.state
-        votes = vote === 'up' ? votes+1 : votes-1
+        let { votedComments } = this.state
         if (!votedComments.includes(commentId)) {
             votedComments.push(commentId)
             API.putCommentVote(commentId, vote)
             this.setState({
                 vote,
-                votedComments, 
-                votes
+                votedComments,
             })
         } else alert('You have already voted')
     }
@@ -71,9 +71,6 @@ class Comment extends React.Component {
         return votedComments.includes(commentId) && vote === voted ? true : false
     }
 
-    static propTypes = {
-    
-    }
 }
 
 export default Comment;
