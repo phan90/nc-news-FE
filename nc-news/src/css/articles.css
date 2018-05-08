@@ -1,0 +1,67 @@
+
+#article {
+	border: solid teal;
+	border-width: thin;
+	margin:35px;
+	padding-left:5px;
+	padding-right:5px;
+ 	box-shadow: 7px 10px 30px 1px rgba(0, 0, 0, 0.68)
+
+}
+
+#articleTitle {
+	font-size: 1.5em;
+	border-bottom: solid grey;
+	border-width: thin;
+}
+#info {
+	color: grey;
+	font-size: 0.8em;
+}
+
+#articleBody {
+	text-align:justify;
+}
+
+.counter {
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+	background-color: teal;
+}
+
+.click:hover {
+	cursor: pointer;
+}
+
+#count {
+	display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+    float: left;
+}
+
+#addComment {
+	float:right;
+	display: block;
+    color: white;
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+#voted {
+	float:right;
+	display: block;
+    color: rgb(76, 79, 82);
+    text-align: center;
+    padding: 10px 16px;
+    text-decoration: none;
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
