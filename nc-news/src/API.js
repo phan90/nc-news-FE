@@ -19,20 +19,16 @@ export const getUser = (username) => {
 
 export const postComment = (articleId, comment) => {
     return axios.post(`${url}/articles/${articleId}/comments`, comment)
-        .then(res => res.data)
 }
 
 export const putCommentVote = (commentId, vote) => {
     return axios.patch(`${url}/comments/${commentId}/?vote=${vote}`)
-        .then(res => console.log(res))
 }
 
 export const putArticleVote = (articleId, vote) => {
     return axios.patch(`${url}/articles/${articleId}/?vote=${vote}`)
-        .then(res => console.log(res))
 }
 
 export const deleteComment = (commentId) => {
     return axios.delete(`${url}/comments/${commentId}`)
-        .then(res => console.log(res))
 }

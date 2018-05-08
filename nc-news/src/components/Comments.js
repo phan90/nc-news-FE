@@ -22,8 +22,17 @@ class Comments extends React.Component {
             .catch(console.error)
     }
 
-    componentDidUpdate() {
-        API.getArticleComments(this.props.articleId)
+    // componentWillReceiveProps(newProps) { 
+    //     API.getArticleComments(newProps.articleId)
+    //         .then(comments => {
+    //             this.setState({
+    //                 comments
+    //             })
+    //         })
+    // }
+
+    componentDidUpdate(newProps) {
+        API.getArticleComments(newProps.articleId)
             .then(comments => {
                 this.setState({
                     comments
@@ -49,12 +58,19 @@ class Comments extends React.Component {
     addNewComment = (event) => {
         const { currentUser, articleId, updateCommentCount } = this.props
         const { comment } = this.state
+        console.log({
+            comment,
+            created_by: currentUser._id,
+        })
         event.preventDefault()
         API.postComment(articleId, {
             comment,
             created_by: currentUser._id,
         })
-        updateCommentCount()
+        // .then(() => {
+        //     updateCommentCount()
+        // })
+        .catch(console.log)
     }
 
     handleChange = (event) => {
